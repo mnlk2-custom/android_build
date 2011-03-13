@@ -449,6 +449,7 @@ GRANDFATHERED_USER_MODULES += \
 	svc \
 	swing-worker-1.1 \
 	swt \
+        sysinit.rc \
 	system_server \
 	tc \
 	temp_layoutlib \
