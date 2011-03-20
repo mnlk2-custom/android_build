@@ -33,7 +33,6 @@ PRODUCT_PACKAGES := \
     Launcher2 \
     Mms \
     Protips \
-    QuickSearchBox \
     Settings \
     Superuser \
     Sync \
