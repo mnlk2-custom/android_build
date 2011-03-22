@@ -295,6 +295,10 @@ def SignOutput(temp_zip_name, output_zip_name):
   common.SignFile(temp_zip_name, output_zip_name, OPTIONS.package_key, pw,
                   whole_file=True)
 
+# Printing of md5sum added for Evervolv by cocide
+  print "############ md5sum ############\n"
+  os.system("md5sum " + output_zip_name)
+  print "\n################################"
 
 def AppendAssertions(script, input_zip):
   device = GetBuildProp("ro.product.device", input_zip)
@@ -384,15 +388,24 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   if OPTIONS.wipe_user_data:
     script.FormatPartition("/data")
+# Comments during install added for Evervolv by cocide
+    script.Print("Wiping user data")
 
   script.FormatPartition("/system")
+# Comments during install added for Evervolv by cocide
+  script.Print("Formatting system")
+
   script.Mount("/system")
   if OPTIONS.recovery:
     script.UnpackPackageDir("recovery", "/system")
   script.UnpackPackageDir("system", "/system")
+# Comments during install added for Evervolv by cocide
+  script.Print("Installing Nameless")
 
   symlinks = CopySystemFiles(input_zip, output_zip)
   script.MakeSymlinks(symlinks)
+# Comments during install added for Evervolv by cocide
+  script.Print("Creating symlinks")
 
   if not OPTIONS.noboot:
     boot_img = common.File("boot.img", common.BuildBootableImage(
@@ -404,6 +417,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
 
   Item.GetMetadata(input_zip)
   Item.Get("system").SetPermissions(script)
+# Comments during install added for Evervolv by cocide
+  script.Print("Setting permissions")
 
   if not OPTIONS.noboot:
     common.CheckSize(boot_img.data, "boot.img", OPTIONS.info_dict)
@@ -413,6 +428,8 @@ def WriteFullOTAPackage(input_zip, output_zip):
   if not OPTIONS.noboot:
     script.ShowProgress(0.2, 10)
     script.WriteRawImage("/boot", "boot.img")
+# Comments during install added for Evervolv by cocide
+    script.Print("Installing boot.img")
 
   script.ShowProgress(0.1, 0)
   device_specific.FullOTA_InstallEnd()
