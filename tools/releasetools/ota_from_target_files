@@ -298,6 +298,7 @@ def SignOutput(temp_zip_name, output_zip_name):
 # Printing of md5sum added for Evervolv by cocide
   print "############ md5sum ############\n"
   os.system("md5sum " + output_zip_name)
+  os.system("touch " + output_zip_name.replace(".zip", ".log"))
   print "\n################################"
 
 def AppendAssertions(script, input_zip):
