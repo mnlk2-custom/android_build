@@ -15,6 +15,17 @@ endif
 # <dest file> is relative to $(PRODUCT_OUT), so it should look like,
 # e.g., "system/etc/file.xml".
 # The filter part means "only eval the copy-one-file rule if this
+<<<<<<< HEAD
+# src:dest pair is the first one to match %:dest"
+$(foreach cf,$(PRODUCT_COPY_FILES), \
+  $(eval _src := $(call word-colon,1,$(cf))) \
+  $(eval _dest := $(call word-colon,2,$(cf))) \
+  $(eval _fulldest := $(call append-path,$(PRODUCT_OUT),$(_dest))) \
+  $(if $(filter $(_src):$(_dest),$(firstword $(filter %:$(_dest),$(PRODUCT_COPY_FILES)))), \
+    $(eval $(call copy-one-file,$(_src),$(_fulldest))),) \
+  $(eval ALL_DEFAULT_INSTALLED_MODULES += $(_fulldest)) \
+ )
+=======
 # src:dest pair is the first one to match the same dest"
 unique_product_copy_files_destinations := $(sort \
     $(foreach cf,$(PRODUCT_COPY_FILES), $(call word-colon,2,$(cf))))
@@ -27,6 +38,7 @@ $(foreach cf,$(PRODUCT_COPY_FILES), \
         $(eval ALL_DEFAULT_INSTALLED_MODULES += $(_fulldest)) \
         $(eval unique_product_copy_files_destinations := $(filter-out $(_dest), \
             $(unique_product_copy_files_destinations)))))
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 # -----------------------------------------------------------------
 # docs/index.html
@@ -115,15 +127,24 @@ $(word 3, 3, $(call default-locale, $(1)))
 endef
 
 BUILDINFO_SH := build/tools/buildinfo.sh
+<<<<<<< HEAD
+$(INSTALLED_BUILD_PROP_TARGET): $(BUILDINFO_SH) $(INTERNAL_BUILD_ID_MAKEFILE) $(BUILD_SYSTEM)/version_defaults.mk $(wildcard $(TARGET_DEVICE_DIR)/system.prop)
+=======
 $(INSTALLED_BUILD_PROP_TARGET): $(BUILDINFO_SH) $(INTERNAL_BUILD_ID_MAKEFILE)
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 	@echo Target buildinfo: $@
 	@mkdir -p $(dir $@)
 	$(hide) TARGET_BUILD_TYPE="$(TARGET_BUILD_VARIANT)" \
 			TARGET_DEVICE="$(TARGET_DEVICE)" \
 			PRODUCT_NAME="$(TARGET_PRODUCT)" \
 			PRODUCT_BRAND="$(PRODUCT_BRAND)" \
+<<<<<<< HEAD
 			PRODUCT_DEFAULT_LANGUAGE="fr" \
 			PRODUCT_DEFAULT_REGION="FR" \
+=======
+			PRODUCT_DEFAULT_LANGUAGE="$(call default-locale-language,$(PRODUCT_LOCALES))" \
+			PRODUCT_DEFAULT_REGION="$(call default-locale-region,$(PRODUCT_LOCALES))" \
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 			PRODUCT_DEFAULT_WIFI_CHANNELS="$(PRODUCT_DEFAULT_WIFI_CHANNELS)" \
 			PRODUCT_MODEL="$(PRODUCT_MODEL)" \
 			PRODUCT_MANUFACTURER="$(PRODUCT_MANUFACTURER)" \
@@ -140,7 +161,10 @@ $(INSTALLED_BUILD_PROP_TARGET): $(BUILDINFO_SH) $(INTERNAL_BUILD_ID_MAKEFILE)
 			TARGET_BOARD_PLATFORM="$(TARGET_BOARD_PLATFORM)" \
 			TARGET_CPU_ABI="$(TARGET_CPU_ABI)" \
 			TARGET_CPU_ABI2="$(TARGET_CPU_ABI2)" \
+<<<<<<< HEAD
 		        $(PRODUCT_BUILD_PROP_OVERRIDES) \
+=======
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 	        bash $(BUILDINFO_SH) > $@
 	$(hide) if [ -f $(TARGET_DEVICE_DIR)/system.prop ]; then \
 	          cat $(TARGET_DEVICE_DIR)/system.prop >> $@; \
@@ -281,15 +305,23 @@ $(all_event_log_tags_file): $(all_event_log_tags_src)
 
 event_log_tags_file := $(TARGET_OUT)/etc/event-log-tags
 
+<<<<<<< HEAD
+# Include tags from all packages included in this product.
+=======
 # Include tags from all packages included in this product, plus all
 # tags that are part of the system (ie, not in a vendor/ or device/
 # directory).
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 event_log_tags_src := \
     $(sort $(foreach m,\
       $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PACKAGES) \
       $(call module-names-for-tag-list,user), \
+<<<<<<< HEAD
+      $(ALL_MODULES.$(m).EVENT_LOG_TAGS)))
+=======
       $(ALL_MODULES.$(m).EVENT_LOG_TAGS)) \
       $(filter-out vendor/% device/% out/%,$(all_event_log_tags_src)))
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 $(event_log_tags_file): PRIVATE_SRC_FILES := $(event_log_tags_src)
 $(event_log_tags_file): PRIVATE_MERGED_FILE := $(all_event_log_tags_file)
@@ -573,12 +605,17 @@ endif
 endif
 endif
 
+<<<<<<< HEAD
 ifneq (true,$(TARGET_USERIMAGES_SPARSE_EXT_DISABLED))
   INTERNAL_USERIMAGES_SPARSE_EXT_FLAG := -s
 endif
 
 ifeq ($(INTERNAL_USERIMAGES_USE_EXT),true)
+INTERNAL_USERIMAGES_DEPS := $(MKEXTUSERIMG) $(MAKE_EXT4FS)
+=======
+ifeq ($(INTERNAL_USERIMAGES_USE_EXT),true)
 INTERNAL_USERIMAGES_DEPS := $(MKEXT2USERIMG) $(MAKE_EXT4FS)
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 INTERNAL_USERIMAGES_BINARY_PATHS := $(sort $(dir $(INTERNAL_USERIMAGES_DEPS)))
 
 # $(1): src directory
@@ -588,8 +625,13 @@ INTERNAL_USERIMAGES_BINARY_PATHS := $(sort $(dir $(INTERNAL_USERIMAGES_DEPS)))
 # $(5): size of the partition
 define build-userimage-ext-target
   @mkdir -p $(dir $(2))
+<<<<<<< HEAD
+  $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$(PATH) \
+	  $(MKEXTUSERIMG) $(INTERNAL_USERIMAGES_SPARSE_EXT_FLAG) $(1) $(2) $(4) $(3) $(5)
+=======
     $(hide) PATH=$(foreach p,$(INTERNAL_USERIMAGES_BINARY_PATHS),$(p):)$(PATH) \
 	  $(MKEXT2USERIMG) $(1) $(2) $(4) $(3) $(5)
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 endef
 else
 INTERNAL_USERIMAGES_DEPS := $(MKYAFFS2)
@@ -701,8 +743,19 @@ ifneq ($(BOARD_NAND_PAGE_SIZE),)
 mkyaffs2_extra_flags := -c $(BOARD_NAND_PAGE_SIZE)
 else
 mkyaffs2_extra_flags :=
+<<<<<<< HEAD
+BOARD_NAND_PAGE_SIZE := 2048
 endif
 
+ifneq ($(BOARD_NAND_SPARE_SIZE),)
+mkyaffs2_extra_flags += -s $(BOARD_NAND_SPARE_SIZE)
+else
+BOARD_NAND_SPARE_SIZE := 64
+endif
+=======
+endif
+
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 # -----------------------------------------------------------------
 # system image
@@ -783,12 +836,17 @@ define build-systemtarball-target
 		$(INSTALLED_SYSTEMTARBALL_TARGET)
 endef
 
+<<<<<<< HEAD
 ifndef SYSTEM_TARBALL_FORMAT
     SYSTEM_TARBALL_FORMAT := bz2
 endif
 
 system_tar := $(PRODUCT_OUT)/system.tar
+INSTALLED_SYSTEMTARBALL_TARGET := $(system_tar).$(SYSTEM_TARBALL_FORMAT)
+=======
+system_tar := $(PRODUCT_OUT)/system.tar
 INSTALLED_SYSTEMTARBALL_TARGET := $(system_tar).bz2
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 $(INSTALLED_SYSTEMTARBALL_TARGET): PRIVATE_SYSTEM_TAR := $(system_tar)
 $(INSTALLED_SYSTEMTARBALL_TARGET): $(FS_GET_STATS) $(INTERNAL_SYSTEMIMAGE_FILES)
 	$(build-systemtarball-target)
@@ -802,7 +860,37 @@ systemtarball-nodeps: $(FS_GET_STATS) \
 stnod: systemtarball-nodeps
 
 
+<<<<<<< HEAD
+#######
+## boot tarball
+define build-boottarball-target
+    $(hide) echo "Target boot fs tarball: $(INSTALLED_BOOTTARBALL_TARGET)"
+    $(hide) mkdir -p $(PRODUCT_OUT)/boot
+    $(hide) cp -f $(INTERNAL_BOOTIMAGE_FILES) $(PRODUCT_OUT)/boot/.
+    $(hide) echo $(BOARD_KERNEL_CMDLINE) > $(PRODUCT_OUT)/boot/cmdline
+    $(hide) $(MKTARBALL) $(FS_GET_STATS) \
+                 $(PRODUCT_OUT) boot $(PRIVATE_BOOT_TAR) \
+                 $(INSTALLED_BOOTTARBALL_TARGET)
+endef
 
+ifndef BOOT_TARBALL_FORMAT
+    BOOT_TARBALL_FORMAT := bz2
+endif
+
+boot_tar := $(PRODUCT_OUT)/boot.tar
+INSTALLED_BOOTTARBALL_TARGET := $(boot_tar).$(BOOT_TARBALL_FORMAT)
+$(INSTALLED_BOOTTARBALL_TARGET): PRIVATE_BOOT_TAR := $(boot_tar)
+$(INSTALLED_BOOTTARBALL_TARGET): $(FS_GET_STATS) $(INTERNAL_BOOTIMAGE_FILES)
+	$(build-boottarball-target)
+
+.PHONY: boottarball-nodeps btnod
+boottarball-nodeps btnod: $(FS_GET_STATS) \
+                      $(filter-out boottarball-nodeps btnod,$(MAKECMDGOALS))
+	$(build-boottarball-target)
+
+
+=======
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 # -----------------------------------------------------------------
 # data partition image
 INTERNAL_USERDATAIMAGE_FILES := \
@@ -1024,7 +1112,12 @@ endif
 ifdef mkyaffs2_extra_flags
 	$(hide) echo "mkyaffs2_extra_flags=$(mkyaffs2_extra_flags)" >> $(zip_root)/META/misc_info.txt
 endif
-
+<<<<<<< HEAD
+ifdef INTERNAL_USERIMAGES_SPARSE_EXT_FLAG
+	$(hide) echo "extfs_sparse_flag=$(INTERNAL_USERIMAGES_SPARSE_EXT_FLAG)" >> $(zip_root)/META/misc_info.txt
+endif
+=======
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 	@# Zip everything up, preserving symlinks
 	$(hide) (cd $(zip_root) && zip -qry ../$(notdir $@) .)
 	@# Run fs_config on all the system files in the zip, and save the output
@@ -1039,7 +1132,10 @@ ifneq ($(TARGET_SIMULATOR),true)
 ifneq ($(TARGET_PRODUCT),sdk)
 ifneq ($(TARGET_DEVICE),generic)
 ifneq ($(TARGET_NO_KERNEL),true)
+<<<<<<< HEAD
+=======
 ifneq ($(recovery_fstab),)
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 # -----------------------------------------------------------------
 # OTA update package
@@ -1092,7 +1188,10 @@ $(INTERNAL_UPDATE_PACKAGE_TARGET): $(BUILT_TARGET_FILES_PACKAGE) $(OTATOOLS)
 .PHONY: updatepackage
 updatepackage: $(INTERNAL_UPDATE_PACKAGE_TARGET)
 
+<<<<<<< HEAD
+=======
 endif    # recovery_fstab is defined
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 endif    # TARGET_NO_KERNEL != true
 endif    # TARGET_DEVICE != generic
 endif    # TARGET_PRODUCT != sdk
@@ -1111,12 +1210,17 @@ $(INSTALLED_FILES_FILE): $(INSTALLED_SYSTEMIMAGE)
 
 .PHONY: installed-file-list
 installed-file-list: $(INSTALLED_FILES_FILE)
+<<<<<<< HEAD
+$(call dist-for-goals, sdk, $(INSTALLED_FILES_FILE))
+$(call dist-for-goals, sdk_addon, $(INSTALLED_FILES_FILE))
+=======
 ifneq ($(filter sdk win_sdk,$(MAKECMDGOALS)),)
 $(call dist-for-goals, sdk win_sdk, $(INSTALLED_FILES_FILE))
 endif
 ifneq ($(filter sdk_addon,$(MAKECMDGOALS)),)
 $(call dist-for-goals, sdk_addon, $(INSTALLED_FILES_FILE))
 endif
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 # -----------------------------------------------------------------
 # A zip of the tests that are built when running "make tests".
@@ -1328,6 +1432,15 @@ $(INTERNAL_SDK_TARGET): PRIVATE_INPUT_FILES := $(sdk_atree_files)
 #
 #SDK_GNU_ERROR := true
 
+<<<<<<< HEAD
+ifeq ($(HOST_OS),darwin)
+HOST_STRIP_SDK_LLVM := strip
+else
+HOST_STRIP_SDK_LLVM := strip --strip-all
+endif
+
+=======
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 $(INTERNAL_SDK_TARGET): $(deps)
 	@echo "Package SDK: $@"
 	$(hide) rm -rf $(PRIVATE_DIR) $@
@@ -1348,12 +1461,24 @@ $(INTERNAL_SDK_TARGET): $(deps)
 			-I $(HOST_OUT) \
 			-I $(TARGET_COMMON_OUT_ROOT) \
 			-v "PLATFORM_NAME=android-$(PLATFORM_VERSION)" \
+<<<<<<< HEAD
+			-v "OUT_DIR=$(OUT_DIR)" \
+=======
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 			-o $(PRIVATE_DIR) && \
 		cp -f $(target_notice_file_txt) \
 				$(PRIVATE_DIR)/platforms/android-$(PLATFORM_VERSION)/images/NOTICE.txt && \
 		cp -f $(tools_notice_file_txt) $(PRIVATE_DIR)/tools/NOTICE.txt && \
+<<<<<<< HEAD
+		if [ -f $(PRIVATE_DIR)/platform-tools/llvm-rs-cc ]; then \
+			$(HOST_STRIP_SDK_LLVM) $(PRIVATE_DIR)/platform-tools/llvm-rs-cc; \
+		fi && \
+		HOST_OUT_EXECUTABLES=$(HOST_OUT_EXECUTABLES) HOST_OS=$(HOST_OS) \
+			development/build/tools/sdk_clean.sh $(PRIVATE_DIR) && \
+=======
 		HOST_OUT_EXECUTABLES=$(HOST_OUT_EXECUTABLES) HOST_OS=$(HOST_OS) \
                 development/build/tools/sdk_clean.sh $(PRIVATE_DIR) && \
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 		chmod -R ug+rwX $(PRIVATE_DIR) && \
 		cd $(dir $@) && zip -rq $(notdir $@) $(PRIVATE_NAME) \
 	) || ( rm -rf $(PRIVATE_DIR) $@ && exit 44 )
@@ -1361,10 +1486,16 @@ $(INTERNAL_SDK_TARGET): $(deps)
 
 # Is a Windows SDK requested? If so, we need some definitions from here
 # in order to find the Linux SDK used to create the Windows one.
+<<<<<<< HEAD
+ifneq ($(filter win_sdk,$(MAKECMDGOALS)),)
+LINUX_SDK_NAME := $(sdk_name)
+LINUX_SDK_DIR  := $(sdk_dir)
+=======
 MAIN_SDK_NAME := $(sdk_name)
 MAIN_SDK_DIR  := $(sdk_dir)
 MAIN_SDK_ZIP  := $(INTERNAL_SDK_TARGET)
 ifneq ($(filter win_sdk,$(MAKECMDGOALS)),)
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 include $(TOPDIR)development/build/tools/windows_sdk.mk
 endif
 
@@ -1391,6 +1522,8 @@ $(INTERNAL_FINDBUGS_HTML_TARGET): $(INTERNAL_FINDBUGS_XML_TARGET)
 include $(sort $(wildcard $(BUILD_SYSTEM)/tasks/*.mk))
 -include $(sort $(wildcard vendor/*/build/tasks/*.mk))
 
+<<<<<<< HEAD
+=======
 # -----------------------------------------------------------------
 # Create SDK repository packages. Must be done after tasks/* since
 # we need the addon rules defined.
@@ -1398,3 +1531,4 @@ ifneq ($(sdk_repo_goal),)
 include $(TOPDIR)development/build/tools/sdk_repo.mk
 endif
 
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb

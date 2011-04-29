@@ -190,8 +190,18 @@ endif
 ###
 
 is_sdk_build :=
+<<<<<<< HEAD
+ifneq ($(filter sdk,$(MAKECMDGOALS)),)
+is_sdk_build := true
+endif
+ifneq ($(filter win_sdk,$(MAKECMDGOALS)),)
+is_sdk_build := true
+endif
+ifneq ($(filter sdk_addon,$(MAKECMDGOALS)),)
+=======
 
 ifneq ($(filter sdk win_sdk sdk_addon,$(MAKECMDGOALS)),)
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 is_sdk_build := true
 endif
 
@@ -202,7 +212,11 @@ user_variant := $(filter userdebug user,$(TARGET_BUILD_VARIANT))
 enable_target_debugging := true
 ifneq (,$(user_variant))
   # Target is secure in user builds.
+<<<<<<< HEAD
   ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=0
+=======
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.secure=1
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
   tags_to_install := user
   ifeq ($(user_variant),userdebug)
@@ -226,7 +240,11 @@ ifneq (,$(user_variant))
   endif
 
   # Disallow mock locations by default for user builds
+<<<<<<< HEAD
   ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=1
+=======
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.allow.mock.location=0
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 else # !user_variant
   # Turn on checkjni for non-user builds.
@@ -244,7 +262,11 @@ ifeq (true,$(strip $(enable_target_debugging)))
   INCLUDE_TEST_OTA_KEYS := true
 else # !enable_target_debugging
   # Target is less debuggable and adbd is off by default
+<<<<<<< HEAD
   ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=1 persist.service.adb.enable=1
+=======
+  ADDITIONAL_DEFAULT_PROPERTIES += ro.debuggable=0 persist.service.adb.enable=0
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 endif # !enable_target_debugging
 
 ## eng ##
@@ -266,11 +288,14 @@ endif
 ## sdk ##
 
 ifdef is_sdk_build
+<<<<<<< HEAD
+=======
 
 # Detect if we want to build a repository for the SDK
 sdk_repo_goal := $(strip $(filter sdk_repo,$(MAKECMDGOALS)))
 MAKECMDGOALS := $(strip $(filter-out sdk_repo,$(MAKECMDGOALS)))
 
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 ifneq ($(words $(filter-out $(INTERNAL_MODIFIER_TARGETS),$(MAKECMDGOALS))),1)
 $(error The 'sdk' target may not be specified with any other targets)
 endif
@@ -762,6 +787,12 @@ docs: $(ALL_DOCS)
 .PHONY: sdk
 ALL_SDK_TARGETS := $(INTERNAL_SDK_TARGET)
 sdk: $(ALL_SDK_TARGETS)
+<<<<<<< HEAD
+$(call dist-for-goals,sdk, \
+	$(ALL_SDK_TARGETS) \
+	$(SYMBOLS_ZIP) \
+ )
+=======
 ifneq ($(filter sdk win_sdk,$(MAKECMDGOALS)),)
 $(call dist-for-goals,sdk win_sdk, \
 	$(ALL_SDK_TARGETS) \
@@ -769,6 +800,7 @@ $(call dist-for-goals,sdk win_sdk, \
 	$(INSTALLED_BUILD_PROP_TARGET) \
  )
 endif
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 .PHONY: findbugs
 findbugs: $(INTERNAL_FINDBUGS_HTML_TARGET) $(INTERNAL_FINDBUGS_XML_TARGET)

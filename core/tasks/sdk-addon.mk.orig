@@ -27,6 +27,8 @@ staging := $(intermediates)/$(addon_dir_leaf)
 sdk_addon_deps :=
 files_to_copy :=
 
+<<<<<<< HEAD
+=======
 define stub-addon-jar-file
 $(subst .jar,_stub-addon.jar,$(1))
 endef
@@ -38,12 +40,16 @@ $(call stub-addon-jar-file,$(1)): $(1) | mkstubs
 		"$$<" "$$@" @$(PRODUCT_SDK_ADDON_STUB_DEFS)
 endef
 
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 # Files that are built and then copied into the sdk-addon
 ifneq ($(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SDK_ADDON_COPY_MODULES)),)
 $(foreach cf,$(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_SDK_ADDON_COPY_MODULES), \
   $(eval _src := $(call module-stubs-files,$(call word-colon,1,$(cf)))) \
+<<<<<<< HEAD
+=======
   $(eval $(call stub-addon-jar,$(_src))) \
   $(eval _src := $(call stub-addon-jar-file,$(_src))) \
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
   $(if $(_src),,$(eval $(error Unknown or unlinkable module: $(call word-colon,1,$(cf)). Requested by $(INTERNAL_PRODUCT)))) \
   $(eval _dest := $(call word-colon,2,$(cf))) \
   $(eval files_to_copy += $(_src):$(_dest)) \
@@ -94,10 +100,13 @@ $(full_target): $(sdk_addon_deps) | $(ACP)
 .PHONY: sdk_addon
 sdk_addon: $(full_target)
 
+<<<<<<< HEAD
+=======
 # Keep the name of the addon final zip around for sdk_repo.
 # This is used by development/build/tools/sdk_repo.mk.
 ADDON_SDK_ZIP := $(full_target)
 
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 $(call dist-for-goals, sdk_addon, $(full_target))
 
 else # addon_name

@@ -155,14 +155,20 @@ endif # !custom
 LOCAL_PROGUARD_FLAGS := $(addprefix -include ,$(proguard_options_file)) $(LOCAL_PROGUARD_FLAGS)
 
 ifeq (true,$(WITH_DEXPREOPT))
+<<<<<<< HEAD
+=======
 ifeq (,$(TARGET_BUILD_APPS))
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 ifneq (,$(LOCAL_SRC_FILES))
 ifndef LOCAL_DEX_PREOPT
 LOCAL_DEX_PREOPT := true
 endif
 endif
 endif
+<<<<<<< HEAD
+=======
 endif
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
 
 # The dex files go in the package, so we don't
 # want to install them separately for this module.

@@ -181,7 +181,10 @@ def main(argv):
 
 if __name__ == '__main__':
   try:
+<<<<<<< HEAD
+=======
     common.CloseInheritedPipes()
+>>>>>>> 16101b8534867f8595025830e5264cd84628f4cb
     main(sys.argv[1:])
   except common.ExternalError, e:
     print
