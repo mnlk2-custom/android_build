@@ -32,7 +32,6 @@ PRODUCT_PACKAGES := \
     LatinIME \
     Launcher2 \
     Mms \
-    Music \
     Protips \
     Settings \
     Superuser \
